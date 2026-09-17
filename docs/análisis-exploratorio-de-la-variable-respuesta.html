@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 9 Análisis exploratorio de la variable respuesta | Exploración y Análisis de las Características de los Abalones</title>
+  <meta name="description" content="En este análisis exploratorio de datos se estudia la base de datos Abalone, con el objetivo de conocer las principales características de los individuos y explorar la relación entre sus características físicas y el número de anillos." />
+  <meta name="generator" content="bookdown 0.48 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 9 Análisis exploratorio de la variable respuesta | Exploración y Análisis de las Características de los Abalones" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="En este análisis exploratorio de datos se estudia la base de datos Abalone, con el objetivo de conocer las principales características de los individuos y explorar la relación entre sus características físicas y el número de anillos." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 9 Análisis exploratorio de la variable respuesta | Exploración y Análisis de las Características de los Abalones" />
+  
+  <meta name="twitter:description" content="En este análisis exploratorio de datos se estudia la base de datos Abalone, con el objetivo de conocer las principales características de los individuos y explorar la relación entre sus características físicas y el número de anillos." />
+  
+
+<meta name="author" content="Mariana Gutiérrez - Daniela Idarraga" />
+
+
+<meta name="date" content="2026-09-17" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="conversión-de-variables.html"/>
+<link rel="next" href="análisis-de-las-variables-independientes.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> EDA</a></li>
+<li class="chapter" data-level="2" data-path="libreria.html"><a href="libreria.html"><i class="fa fa-check"></i><b>2</b> Libreria</a></li>
+<li class="chapter" data-level="3" data-path="primera-data.html"><a href="primera-data.html"><i class="fa fa-check"></i><b>3</b> Primera data</a></li>
+<li class="chapter" data-level="4" data-path="exploración-inicial-de-los-datos.html"><a href="exploración-inicial-de-los-datos.html"><i class="fa fa-check"></i><b>4</b> Exploración inicial de los datos</a></li>
+<li class="chapter" data-level="5" data-path="cambio-de-nombres-de-las-variables.html"><a href="cambio-de-nombres-de-las-variables.html"><i class="fa fa-check"></i><b>5</b> Cambio de nombres de las variables</a></li>
+<li class="chapter" data-level="6" data-path="segunda-data.html"><a href="segunda-data.html"><i class="fa fa-check"></i><b>6</b> Segunda data</a></li>
+<li class="chapter" data-level="7" data-path="valores-faltantes.html"><a href="valores-faltantes.html"><i class="fa fa-check"></i><b>7</b> Valores faltantes</a></li>
+<li class="chapter" data-level="8" data-path="conversión-de-variables.html"><a href="conversión-de-variables.html"><i class="fa fa-check"></i><b>8</b> Conversión de variables</a></li>
+<li class="chapter" data-level="9" data-path="análisis-exploratorio-de-la-variable-respuesta.html"><a href="análisis-exploratorio-de-la-variable-respuesta.html"><i class="fa fa-check"></i><b>9</b> Análisis exploratorio de la variable respuesta</a></li>
+<li class="chapter" data-level="10" data-path="análisis-de-las-variables-independientes.html"><a href="análisis-de-las-variables-independientes.html"><i class="fa fa-check"></i><b>10</b> Análisis de las variables independientes</a></li>
+<li class="chapter" data-level="11" data-path="boxplots-de-las-variables-independientes.html"><a href="boxplots-de-las-variables-independientes.html"><i class="fa fa-check"></i><b>11</b> Boxplots de las variables independientes</a></li>
+<li class="chapter" data-level="12" data-path="comparación-de-los-boxplots.html"><a href="comparación-de-los-boxplots.html"><i class="fa fa-check"></i><b>12</b> Comparación de los boxplots</a></li>
+<li class="chapter" data-level="13" data-path="análisis-de-la-variable-categórica-sexo.html"><a href="análisis-de-la-variable-categórica-sexo.html"><i class="fa fa-check"></i><b>13</b> Análisis de la variable categórica Sexo</a></li>
+<li class="chapter" data-level="14" data-path="análisis-bivariado.html"><a href="análisis-bivariado.html"><i class="fa fa-check"></i><b>14</b> Análisis bivariado</a></li>
+<li class="chapter" data-level="15" data-path="correlación.html"><a href="correlación.html"><i class="fa fa-check"></i><b>15</b> Correlación</a></li>
+<li class="chapter" data-level="16" data-path="relación-entre-sexo-y-anillos.html"><a href="relación-entre-sexo-y-anillos.html"><i class="fa fa-check"></i><b>16</b> Relación entre Sexo y Anillos</a></li>
+<li class="chapter" data-level="17" data-path="conclusión-del-análisis-exploratorio.html"><a href="conclusión-del-análisis-exploratorio.html"><i class="fa fa-check"></i><b>17</b> Conclusión del análisis exploratorio</a></li>
+<li class="chapter" data-level="18" data-path="literature.html"><a href="literature.html"><i class="fa fa-check"></i><b>18</b> Literature</a></li>
+<li class="chapter" data-level="19" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>19</b> Methods</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="methods.html"><a href="methods.html#math-example"><i class="fa fa-check"></i><b>19.1</b> math example</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="applications.html"><a href="applications.html"><i class="fa fa-check"></i><b>20</b> Applications</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="applications.html"><a href="applications.html#example-one"><i class="fa fa-check"></i><b>20.1</b> Example one</a></li>
+<li class="chapter" data-level="20.2" data-path="applications.html"><a href="applications.html#example-two"><i class="fa fa-check"></i><b>20.2</b> Example two</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="final-words.html"><a href="final-words.html"><i class="fa fa-check"></i><b>21</b> Final Words</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Exploración y Análisis de las Características de los Abalones</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="análisis-exploratorio-de-la-variable-respuesta" class="section level1 hasAnchor" number="9">
+<h1><span class="header-section-number">Chapter 9</span> Análisis exploratorio de la variable respuesta<a href="análisis-exploratorio-de-la-variable-respuesta.html#an%C3%A1lisis-exploratorio-de-la-variable-respuesta" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb64-1" tabindex="-1"></a>data2 <span class="sc">%&gt;%</span> </span>
+<span id="cb64-2"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb64-2" tabindex="-1"></a>  <span class="fu">summarise</span>( </span>
+<span id="cb64-3"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb64-3" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">length</span>(Anillos), </span>
+<span id="cb64-4"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb64-4" tabindex="-1"></a>    <span class="at">media =</span> <span class="fu">mean</span>(Anillos), </span>
+<span id="cb64-5"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb64-5" tabindex="-1"></a>    <span class="at">sd =</span> <span class="fu">sd</span>(Anillos), </span>
+<span id="cb64-6"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb64-6" tabindex="-1"></a>    <span class="at">mediana =</span> <span class="fu">median</span>(Anillos),</span>
+<span id="cb64-7"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb64-7" tabindex="-1"></a>    <span class="at">RIC =</span> <span class="fu">IQR</span>(Anillos), </span>
+<span id="cb64-8"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb64-8" tabindex="-1"></a>    <span class="at">Q1 =</span> <span class="fu">quantile</span>(Anillos, <span class="fl">0.25</span>), </span>
+<span id="cb64-9"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb64-9" tabindex="-1"></a>    <span class="at">Q3 =</span> <span class="fu">quantile</span>(Anillos, <span class="fl">0.75</span>), </span>
+<span id="cb64-10"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb64-10" tabindex="-1"></a>    <span class="at">minimo =</span> <span class="fu">min</span>(Anillos), </span>
+<span id="cb64-11"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb64-11" tabindex="-1"></a>    <span class="at">maximo =</span> <span class="fu">max</span>(Anillos), </span>
+<span id="cb64-12"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb64-12" tabindex="-1"></a>    <span class="at">asimetria =</span> <span class="fu">skewness</span>(Anillos), </span>
+<span id="cb64-13"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb64-13" tabindex="-1"></a>    <span class="at">curtosis =</span> <span class="fu">kurtosis</span>(Anillos) </span>
+<span id="cb64-14"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb64-14" tabindex="-1"></a>    )</span></code></pre></div>
+<pre><code>##      n    media       sd mediana RIC Q1 Q3 minimo maximo asimetria curtosis
+## 1 4177 9.933684 3.224169       9   3  8 11      1     29  1.113702 5.326462</code></pre>
+<p><strong>INTERPRETACION</strong></p>
+<p>La media representa el número promedio de anillos de los individuos de la muestra, mientras que la mediana representa el valor central de la distribución.La desviación estándar permite observar qué tan dispersos se encuentran los valores de Anillos respecto a su media. Por otra parte, el rango intercuartílico representa la dispersión del 50 % central de las observaciones.
+Los valores mínimo y máximo permiten identificar el rango en el que se encuentra el número de anillos.La asimetría permite determinar si la distribución se encuentra desplazada hacia alguno de sus extremos. Si la asimetría es positiva, existe una mayor concentración de valores pequeños y una cola hacia valores grandes. La curtosis permite analizar el<br />
+comportamiento de la distribución respecto a su concentración y presencia de valores extremos.</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb66-1" tabindex="-1"></a>data2 <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Anillos)) <span class="sc">+</span> </span>
+<span id="cb66-2"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb66-2" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( </span>
+<span id="cb66-3"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb66-3" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)), </span>
+<span id="cb66-4"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb66-4" tabindex="-1"></a>    <span class="at">binwidth =</span> <span class="dv">1</span>, </span>
+<span id="cb66-5"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb66-5" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">&quot;#FFE1FF&quot;</span>, </span>
+<span id="cb66-6"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb66-6" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">&quot;#CD96CD&quot;</span>,</span>
+<span id="cb66-7"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb66-7" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.6</span> </span>
+<span id="cb66-8"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb66-8" tabindex="-1"></a>    ) <span class="sc">+</span> </span>
+<span id="cb66-9"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb66-9" tabindex="-1"></a>  <span class="fu">geom_density</span>( </span>
+<span id="cb66-10"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb66-10" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">&quot;#8B668B&quot;</span>, </span>
+<span id="cb66-11"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb66-11" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">1.2</span> </span>
+<span id="cb66-12"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb66-12" tabindex="-1"></a>    ) <span class="sc">+</span> </span>
+<span id="cb66-13"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb66-13" tabindex="-1"></a>  <span class="fu">labs</span>( <span class="at">title =</span> <span class="st">&quot;Distribución del número de anillos&quot;</span>,</span>
+<span id="cb66-14"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb66-14" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">&quot;Número de anillos&quot;</span>, </span>
+<span id="cb66-15"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb66-15" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">&quot;Densidad&quot;</span> </span>
+<span id="cb66-16"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb66-16" tabindex="-1"></a>        ) <span class="sc">+</span> </span>
+<span id="cb66-17"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb66-17" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/Histograma%20de%20la%20variable%20Anillos-1.png" width="672" />
+<strong>INTERPRETACION</strong></p>
+<p>El histograma permite observar la distribución de la variable Anillos. Se puede identificar en qué valores se concentra la mayor cantidad de observaciones y cómo disminuye la frecuencia hacia los extremos.La curva de densidad permite visualizar de manera más clara la forma general de la distribución.</p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb67-1" tabindex="-1"></a>data2 <span class="sc">%&gt;%</span> </span>
+<span id="cb67-2"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb67-2" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="st">&quot;&quot;</span>, <span class="at">x =</span> Anillos)) <span class="sc">+</span> </span>
+<span id="cb67-3"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb67-3" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>( <span class="at">fill =</span> <span class="st">&quot;#FFE1FF&quot;</span>, <span class="at">color =</span> <span class="st">&quot;#CD96CD&quot;</span> ) <span class="sc">+</span> </span>
+<span id="cb67-4"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb67-4" tabindex="-1"></a>  <span class="fu">stat_summary</span>( <span class="at">fun =</span> mean, </span>
+<span id="cb67-5"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb67-5" tabindex="-1"></a>                <span class="at">geom =</span> <span class="st">&quot;point&quot;</span>, </span>
+<span id="cb67-6"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb67-6" tabindex="-1"></a>                <span class="at">shape =</span> <span class="dv">20</span>, <span class="at">size =</span> <span class="dv">3</span>, </span>
+<span id="cb67-7"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb67-7" tabindex="-1"></a>                <span class="at">color =</span> <span class="st">&quot;#8B668B&quot;</span> ) <span class="sc">+</span> </span>
+<span id="cb67-8"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb67-8" tabindex="-1"></a>  <span class="fu">labs</span>( <span class="at">title =</span> <span class="st">&quot;Diagrama de caja del número de anillos&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Número de anillos&quot;</span>, <span class="at">y =</span> <span class="st">&quot;&quot;</span> ) <span class="sc">+</span> </span>
+<span id="cb67-9"><a href="análisis-exploratorio-de-la-variable-respuesta.html#cb67-9" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/Boxplot%20de%20la%20variable%20Anillos-1.png" width="672" />
+<strong>INTERPRETACION</strong></p>
+<p>El diagrama de caja permite observar la mediana, los cuartiles y la dispersión de la variable Anillos. Los puntos que aparecen alejados del resto de las observaciones pueden representar posibles valores atípicos.La posición de la media<br />
+respecto a la mediana también permite complementar el análisis de la forma de la distribución.</p>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="conversión-de-variables.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="análisis-de-las-variables-independientes.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": "https://github.com/rstudio/bookdown-demo/edit/master/01-intro.Rmd",
+    "text": "Edit"
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

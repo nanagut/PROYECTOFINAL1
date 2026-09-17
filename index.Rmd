@@ -12,15 +12,11 @@ github-repo: rstudio/bookdown-demo
 description: "En este análisis exploratorio de datos se estudia la base de datos Abalone, con el objetivo de conocer las principales características de los individuos y explorar la relación entre sus características físicas y el número de anillos."
 ---
 
-```{r eval=FALSE}
-install.packages("bookdown")
-# or the development version
-# devtools::install_github("rstudio/bookdown")
-```
+# INTRODUCCION {-}
 
-```{r include=FALSE}
-# automatically create a bib database for R packages
-knitr::write_bib(c(
-  .packages(), 'bookdown', 'knitr', 'rmarkdown'
-), 'packages.bib')
-```
+Los abalones son moluscos marinos cuyo crecimiento y edad pueden estudiarse a partir del número de anillos presentes en su concha. Tradicionalmente, determinar la edad de un abalone requiere contar sus anillos, un proceso que puede resultar demorado. Por esta razón, resulta interesante analizar si características físicas que pueden medirse con mayor facilidad, como el largo, diámetro, altura y diferentes medidas de peso, presentan una relación con el número de anillos.
+
+En este proyecto se realiza un análisis exploratorio de datos sobre un conjunto de observaciones de abalones, considerando variables físicas y el número de anillos como una aproximación de su edad. El análisis busca conocer las características generales de los datos, identificar posibles valores atípicos y explorar las relaciones entre las variables físicas y el número de anillos.
+
+A través de herramientas estadísticas y gráficas se pretende identificar patrones y asociaciones presentes en los datos. En particular, se estudia la correlación entre las características físicas de los abalones y el número de anillos, con el propósito de obtener una primera comprensión de qué variables presentan una mayor relación lineal con esta medida.
+

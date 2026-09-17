@@ -1,6 +1,6 @@
 # EDA {#intro}
 
-  #Libreria 
+## Libreria 
 ```{r Librerias}
 library(tidyverse)
 library(dplyr)
@@ -16,13 +16,13 @@ library(rstatix)
 library(coin)
 ```
 
-##Primera data
+## Primera data
 
 ```{r Data}
 data <- read.csv("C:/Users/Mariana/OneDrive/Desktop/PROYECTO FINAL/PROYECTOFINAL/PROYECTOFINAL/abalone/abalone.data", header=FALSE)
 ```
 
-##Exploración inicial de los datos
+ # Exploración inicial de los datos
 
 ```{r Exploración inicial}
 head(data, 5) 
@@ -32,7 +32,7 @@ colnames(data)
 str(data)
 ```
 
-##Cambio de nombres de las variables
+## Cambio de nombres de las variables
 
 ```{r Cambio de variables}
 data2 <- data %>%
@@ -51,7 +51,7 @@ data2 <- data %>%
 head(data2)
 ```
 
-##Segunda data
+## Segunda data
 ```{r Estructura de la nueva data}
 str(data2)
 ```
@@ -63,7 +63,7 @@ dim(data2)
 colnames(data2)
 ```
 
-##Valores faltantes
+## Valores faltantes
 ```{r Valores faltantes}
 data2 %>% 
   summarise( 
@@ -81,18 +81,18 @@ missmap(
   col = c("#8B668B", "#E6D5E6")
 )
 ```
- #Interpretación
+ **INTERPRETACION**
 
   La tabla permite identificar la cantidad de datos faltantes presentes en cada variable. El mapa de datos faltantes permite   visualizar de manera gráfica la presencia o ausencia de estos valores. Si todas las variables presentan un valor de 0,      significa que la base de datos no contiene datos faltantes y, por lo tanto, no es necesario realizar un proceso de          imputación.
 
 
-##Conversión de variables
+## Conversión de variables
 ```{r Nuevas variables}
 data2$Sexo <- factor(data2$Sexo)
 str(data2)
 ```
 
-##Análisis exploratorio de la variable respuesta
+## Análisis exploratorio de la variable respuesta
 ```{r Exploratorio de la variable Anillos}
 data2 %>% 
   summarise( 
@@ -109,7 +109,7 @@ data2 %>%
     curtosis = kurtosis(Anillos) 
     )
 ```
-  # Interpretación
+  **INTERPRETACION**
 
   La media representa el número promedio de anillos de los individuos de la muestra, mientras que la mediana representa el    valor central de la distribución.La desviación estándar permite observar qué tan dispersos se encuentran los valores de     Anillos respecto a su media. Por otra parte, el rango intercuartílico representa la dispersión del 50 % central de las      observaciones.
   Los valores mínimo y máximo permiten identificar el rango en el que se encuentra el número de anillos.La asimetría permite   determinar si la distribución se encuentra desplazada hacia alguno de sus extremos. Si la asimetría es positiva, existe     una mayor concentración de valores pequeños y una cola hacia valores grandes. La curtosis permite analizar el    
@@ -134,7 +134,7 @@ data2 %>% ggplot(aes(x = Anillos)) +
         ) + 
   theme_bw()
 ```
-  #Interpretación
+  **INTERPRETACION**
 
   El histograma permite observar la distribución de la variable Anillos. Se puede identificar en qué valores se concentra la   mayor cantidad de observaciones y cómo disminuye la frecuencia hacia los extremos.La curva de densidad permite visualizar   de manera más clara la forma general de la distribución.
 
@@ -149,12 +149,12 @@ data2 %>%
   labs( title = "Diagrama de caja del número de anillos", x = "Número de anillos", y = "" ) + 
   theme_bw()
 ```
-  #Interpretación.
+  **INTERPRETACION**
 
   El diagrama de caja permite observar la mediana, los cuartiles y la dispersión de la variable Anillos. Los puntos que       aparecen alejados del resto de las observaciones pueden representar posibles valores atípicos.La posición de la media    
   respecto a la mediana también permite complementar el análisis de la forma de la distribución.
 
-##Análisis de las variables independientes
+## Análisis de las variables independientes
 ```{r Resumen de las variables independientes}
 data2 %>% 
   select(where(is.numeric), -Anillos) %>% 
@@ -172,13 +172,13 @@ data2 %>%
              minimo = min(valor), maximo = max(valor), asimetria = skewness(valor), curtosis = kurtosis(valor) 
              )
 ```
- #Interpretación
+ **INTERPRETACION**
 
   El resumen estadístico permite comparar las diferentes características físicas de los abalones. Las variables de longitud,   diámetro y altura permiten describir las dimensiones físicas de los individuos, mientras que las variables de peso   
   permiten analizar diferentes componentes de su masa. La comparación entre la media y la mediana permite identificar 
   posibles asimetrías. Además, los valores mínimo y máximo permiten conocer el rango de cada variable.
 
-##Boxplots de las variables independientes
+## Boxplots de las variables independientes
 ```{r Boxplot Largo}
 data2 %>% 
   ggplot(aes(y = "", x = Largo)) + 
@@ -266,18 +266,18 @@ data2 %>%
   labs( title = "Peso del caparazón", x = "Peso del caparazón", y = "" ) + theme_bw() -> p7
 ```
 
-##Comparación de los boxplots
+## Comparación de los boxplots
 ```{r Comparación de los boxplot}
 p1 + p2 + p3 + p4 + p5 + p6 + p7
 ```
-  #Interpretación
+  **INTERPRETACION**
 
   Los diagramas de caja permiten comparar la distribución y dispersión de las diferentes características físicas.Las   
   variables relacionadas con el peso pueden presentar valores alejados de la concentración principal de los datos. Estos 
   valores deben ser identificados como posibles observaciones atípicas y no necesariamente como errores.Las variables de 
   dimensiones físicas permiten observar la variabilidad en el tamaño de los individuos de la muestra.
 
-##Análisis de la variable categórica Sexo
+## Análisis de la variable categórica Sexo
 ```{r Análisis de la variable categórica Sexo}
 data2 %>% 
   count(Sexo, name = "n") %>% 
@@ -291,13 +291,13 @@ data2 %>%
   labs( title = "Distribución del sexo", x = "Sexo", y = "Frecuencia" ) + theme_bw()
 ```
 
-  #Interpretación
+  **INTERPRETACION**
 
   El gráfico permite observar la cantidad de individuos pertenecientes a cada categoría de Sexo. La comparación de las 
   frecuencias permite determinar si existe un predominio de alguna categoría o si la distribución de los individuos es 
   relativamente equilibrada.
 
-##Análisis bivariado
+## Análisis bivariado
 ```{r Análisis Bivariado Largo vs Anillos}
 data2 %>% 
   ggplot(aes(x = Largo, y = Anillos)) + 
@@ -308,7 +308,7 @@ data2 %>%
   theme_bw()
 ```
 
-  #Interpretación
+  **INTERPRETACION**
 
   El gráfico permite observar la relación entre el largo del abalone y el número de anillos. La tendencia general permite 
   evaluar si los individuos con mayor longitud tienden a presentar un mayor número de anillos.
@@ -370,7 +370,7 @@ data2 %>%
   theme_bw()
 ```
 
-##Correlación
+## Correlación
 ```{r ggpairs}
 
 data2 %>% 
@@ -403,7 +403,7 @@ correlaciones <- data2 %>%
 round(correlaciones, 3)
 ```
 
-  #Interpretación
+  **INTERPRETACION**
 
   El coeficiente de correlación de Pearson permite medir la intensidad y dirección de la relación lineal entre cada   
   característica física y el número de anillos. El coeficiente toma valores entre -1 y 1. Valores positivos indican que, en 
@@ -412,7 +412,7 @@ round(correlaciones, 3)
   identificar qué variables presentan una mayor asociación lineal con Anillos. Sin embargo, una correlación no implica 
   necesariamente una relación causal entre las 
   
-##Relación entre Sexo y Anillos
+## Relación entre Sexo y Anillos
 ```{r Análisis Anillos según Sexo}
 data2 %>% 
   ggplot(aes(x = Sexo, y = Anillos)) + 
@@ -426,12 +426,12 @@ data2 %>%
   theme_bw()
 ```
 
-  #Interpretación
+  **INTERPRETACION**
 
   El diagrama de caja permite comparar la distribución de Anillos entre las diferentes categorías de Sexo. La comparación de   las medianas, los rangos intercuartílicos y los posibles valores atípicos permite identificar diferencias descriptivas   
   entre los grupos.
 
-##Conclusión del análisis exploratorio
+## Conclusión del análisis exploratorio
 El análisis exploratorio permite conocer las principales características de la base de datos Abalone. La variable Anillos presenta variabilidad entre los individuos, mientras que las variables físicas permiten describir diferentes características relacionadas con el tamaño y peso de los abalones.El análisis gráfico y estadístico permite identificar la distribución de cada variable, posibles valores atípicos y relaciones entre las características físicas y el número de anillos. 
 
 Las variables cuantitativas pueden analizarse mediante medidas descriptivas, histogramas, diagramas de caja y correlaciones. Por su parte, Sexo permite realizar comparaciones entre grupos.Estos resultados proporcionan una primera descripción de los datos y sirven como base para realizar posteriormente análisis estadísticos más específicos.
