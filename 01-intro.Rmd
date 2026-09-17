@@ -1,0 +1,63 @@
+# EDA {#intro}
+
+#Libreria 
+```{r}
+library(tidyverse)
+library(nortest)   
+library(car)       
+library(effsize)   
+library(rstatix)
+```
+
+```{r data}
+data <- read.csv("C:/Users/Mariana/OneDrive/Desktop/PROYECTO FINAL/PROYECTOFINAL/PROYECTOFINAL/abalone/abalone.data", header=FALSE)
+```
+
+```{r}
+head(data, 5)
+tail(data, 5)
+dim(data)          # 90.615 filas, 10 columnas
+colnames(data)
+str(data)
+```
+```{r Cambio de variables}
+data2 <- data %>%
+  rename(
+    Sexo         = V1,
+    Largo        = V2,
+    Diametro = V3,
+    Altura = V4,
+    Peso    = V5  ,
+    Peso_carne = V6,
+    Peso_visceras = V7 ,
+    Peso_caparazon = V8,
+    Anillos     = V9  
+  )
+
+head(data2)
+```
+```{r Valores ausentes}
+data2 %>% summarise(across(everything(), ~ sum(is.na(.)), .names = "NA_{.col}"))
+```
+
+```{r Valores duplicados}
+sum(duplicated(data2))
+```
+
+```{r  Ceros imposibles en variables numericas }
+data2 %>% summarise(across(where(is.numeric), ~ sum(. == 0), .names = "ceros_{.col}"))
+
+data2 <- data2 %>%
+  mutate(Altura = ifelse(Altura == 0, NA, Altura)) %>%
+  mutate(across(where(is.numeric), ~ ifelse(is.na(.), mean(., na.rm = TRUE), .)))
+
+data2 %>% summarise(NA_Altura = sum(is.na(Altura)), ceros_Altura = sum(Altura == 0))
+```
+
+```{r}
+data2 <- data2 %>%
+  mutate(Sexo = factor(Sexo, levels = c("F", "M", "I"),
+                        labels = c("Hembra", "Macho", "Indeterminado")))
+str(data2)
+```
+ 
