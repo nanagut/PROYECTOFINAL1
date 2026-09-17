@@ -1,25 +1,39 @@
 # EDA {#intro}
 
-#Libreria 
-```{r}
+  #Libreria 
+```{r Librerias}
 library(tidyverse)
-library(nortest)   
-library(car)       
-library(effsize)   
+library(dplyr)
+library(Amelia)
+library(moments)
+library(patchwork)
+library(GGally)
+library(effsize)
+library(openintro)
+library(nortest)
+library(car)
 library(rstatix)
+library(coin)
 ```
 
-```{r data}
+##Primera data
+
+```{r Data}
 data <- read.csv("C:/Users/Mariana/OneDrive/Desktop/PROYECTO FINAL/PROYECTOFINAL/PROYECTOFINAL/abalone/abalone.data", header=FALSE)
 ```
 
-```{r}
-head(data, 5)
-tail(data, 5)
-dim(data)          # 90.615 filas, 10 columnas
-colnames(data)
+##Exploración inicial de los datos
+
+```{r Exploración inicial}
+head(data, 5) 
+tail(data, 5) 
+dim(data) 
+colnames(data) 
 str(data)
 ```
+
+##Cambio de nombres de las variables
+
 ```{r Cambio de variables}
 data2 <- data %>%
   rename(
@@ -36,28 +50,388 @@ data2 <- data %>%
 
 head(data2)
 ```
-```{r Valores ausentes}
-data2 %>% summarise(across(everything(), ~ sum(is.na(.)), .names = "NA_{.col}"))
-```
 
-```{r Valores duplicados}
-sum(duplicated(data2))
-```
-
-```{r  Ceros imposibles en variables numericas }
-data2 %>% summarise(across(where(is.numeric), ~ sum(. == 0), .names = "ceros_{.col}"))
-
-data2 <- data2 %>%
-  mutate(Altura = ifelse(Altura == 0, NA, Altura)) %>%
-  mutate(across(where(is.numeric), ~ ifelse(is.na(.), mean(., na.rm = TRUE), .)))
-
-data2 %>% summarise(NA_Altura = sum(is.na(Altura)), ceros_Altura = sum(Altura == 0))
-```
-
-```{r}
-data2 <- data2 %>%
-  mutate(Sexo = factor(Sexo, levels = c("F", "M", "I"),
-                        labels = c("Hembra", "Macho", "Indeterminado")))
+##Segunda data
+```{r Estructura de la nueva data}
 str(data2)
 ```
+```{r Dimension }
+dim(data2)
+```
+
+```{r Nombres de las variables}
+colnames(data2)
+```
+
+##Valores faltantes
+```{r Valores faltantes}
+data2 %>% 
+  summarise( 
+    across( 
+      everything(),
+      ~ sum(is.na(.)),
+      .names = "NA_{.col}" 
+      ) 
+    )
+```
  
+```{r Missmap}
+missmap(
+  data2,
+  col = c("#8B668B", "#E6D5E6")
+)
+```
+ #Interpretación
+
+  La tabla permite identificar la cantidad de datos faltantes presentes en cada variable. El mapa de datos faltantes permite   visualizar de manera gráfica la presencia o ausencia de estos valores. Si todas las variables presentan un valor de 0,      significa que la base de datos no contiene datos faltantes y, por lo tanto, no es necesario realizar un proceso de          imputación.
+
+
+##Conversión de variables
+```{r Nuevas variables}
+data2$Sexo <- factor(data2$Sexo)
+str(data2)
+```
+
+##Análisis exploratorio de la variable respuesta
+```{r Exploratorio de la variable Anillos}
+data2 %>% 
+  summarise( 
+    n = length(Anillos), 
+    media = mean(Anillos), 
+    sd = sd(Anillos), 
+    mediana = median(Anillos),
+    RIC = IQR(Anillos), 
+    Q1 = quantile(Anillos, 0.25), 
+    Q3 = quantile(Anillos, 0.75), 
+    minimo = min(Anillos), 
+    maximo = max(Anillos), 
+    asimetria = skewness(Anillos), 
+    curtosis = kurtosis(Anillos) 
+    )
+```
+  # Interpretación
+
+  La media representa el número promedio de anillos de los individuos de la muestra, mientras que la mediana representa el    valor central de la distribución.La desviación estándar permite observar qué tan dispersos se encuentran los valores de     Anillos respecto a su media. Por otra parte, el rango intercuartílico representa la dispersión del 50 % central de las      observaciones.
+  Los valores mínimo y máximo permiten identificar el rango en el que se encuentra el número de anillos.La asimetría permite   determinar si la distribución se encuentra desplazada hacia alguno de sus extremos. Si la asimetría es positiva, existe     una mayor concentración de valores pequeños y una cola hacia valores grandes. La curtosis permite analizar el    
+  comportamiento de la distribución respecto a su concentración y presencia de valores extremos.
+
+```{r Histograma de la variable Anillos}
+data2 %>% ggplot(aes(x = Anillos)) + 
+  geom_histogram( 
+    aes(y = after_stat(density)), 
+    binwidth = 1, 
+    fill = "#FFE1FF", 
+    color = "#CD96CD",
+    alpha = 0.6 
+    ) + 
+  geom_density( 
+    color = "#8B668B", 
+    linewidth = 1.2 
+    ) + 
+  labs( title = "Distribución del número de anillos",
+        x = "Número de anillos", 
+        y = "Densidad" 
+        ) + 
+  theme_bw()
+```
+  #Interpretación
+
+  El histograma permite observar la distribución de la variable Anillos. Se puede identificar en qué valores se concentra la   mayor cantidad de observaciones y cómo disminuye la frecuencia hacia los extremos.La curva de densidad permite visualizar   de manera más clara la forma general de la distribución.
+
+```{r Boxplot de la variable Anillos}
+data2 %>% 
+  ggplot(aes(y = "", x = Anillos)) + 
+  geom_boxplot( fill = "#FFE1FF", color = "#CD96CD" ) + 
+  stat_summary( fun = mean, 
+                geom = "point", 
+                shape = 20, size = 3, 
+                color = "#8B668B" ) + 
+  labs( title = "Diagrama de caja del número de anillos", x = "Número de anillos", y = "" ) + 
+  theme_bw()
+```
+  #Interpretación.
+
+  El diagrama de caja permite observar la mediana, los cuartiles y la dispersión de la variable Anillos. Los puntos que       aparecen alejados del resto de las observaciones pueden representar posibles valores atípicos.La posición de la media    
+  respecto a la mediana también permite complementar el análisis de la forma de la distribución.
+
+##Análisis de las variables independientes
+```{r Resumen de las variables independientes}
+data2 %>% 
+  select(where(is.numeric), -Anillos) %>% 
+  pivot_longer( cols = everything(), 
+                names_to = "variable", 
+                values_to = "valor" ) %>% 
+  group_by(variable) %>% 
+  summarise( n = length(valor), 
+             media = mean(valor), 
+             sd = sd(valor), 
+             mediana = median(valor), 
+             RIC = IQR(valor), 
+             Q1 = quantile(valor, 0.25), 
+             Q3 = quantile(valor, 0.75), 
+             minimo = min(valor), maximo = max(valor), asimetria = skewness(valor), curtosis = kurtosis(valor) 
+             )
+```
+ #Interpretación
+
+  El resumen estadístico permite comparar las diferentes características físicas de los abalones. Las variables de longitud,   diámetro y altura permiten describir las dimensiones físicas de los individuos, mientras que las variables de peso   
+  permiten analizar diferentes componentes de su masa. La comparación entre la media y la mediana permite identificar 
+  posibles asimetrías. Además, los valores mínimo y máximo permiten conocer el rango de cada variable.
+
+##Boxplots de las variables independientes
+```{r Boxplot Largo}
+data2 %>% 
+  ggplot(aes(y = "", x = Largo)) + 
+  geom_boxplot( fill = "#FFE1FF", color = "#CD96CD" ) + 
+  stat_summary( fun = mean, 
+                geom = "point", 
+                shape = 20, 
+                size = 3, 
+                color = "#8B668B" ) + 
+  labs( title = "Largo", x = "Largo", y = "" ) + 
+  theme_bw() -> p1
+```
+
+```{r Boxplot Diametro}
+data2 %>% 
+  ggplot(aes(y = "", x = Diametro)) + 
+  geom_boxplot( fill = "#FFE1FF", color = "#CD96CD" ) + 
+  stat_summary( fun = mean, 
+                geom = "point", 
+                shape = 20, size = 3, 
+                color = "#8B668B" ) + 
+  labs( title = "Diámetro", x = "Diámetro", y = "" ) + 
+  theme_bw() -> p2
+```
+
+```{r Boxplot Altura}
+data2 %>% 
+  ggplot(aes(y = "", x = Altura)) + 
+  geom_boxplot( fill = "#FFE1FF", color = "#CD96CD" ) + 
+  stat_summary( fun = mean, 
+                geom = "point", 
+                shape = 20, 
+                size = 3, 
+                color = "#8B668B" ) + 
+  labs( title = "Altura", x = "Altura", y = "" ) + 
+  theme_bw() -> p3
+```
+
+```{r Boxplot Peso}
+data2 %>%
+  ggplot(aes(y = "", x = Peso)) +
+  geom_boxplot(fill = "#FFE1FF",color = "#CD96CD") +
+  stat_summary(fun = mean,
+              geom = "point",
+              shape = 20,
+              size = 3,
+              color = "#8B668B") +
+  labs(title = "Peso total", x = "Peso",y = "") +
+  theme_bw() -> p4
+```
+
+```{r Boxplot Peso_carne}
+data2 %>% 
+  ggplot(aes(y = "", x = Peso_carne)) + 
+  geom_boxplot( fill = "#FFE1FF", color = "#CD96CD" ) + 
+  stat_summary( fun = mean, 
+                geom = "point", 
+                shape = 20, 
+                size = 3, 
+                color = "#8B668B" ) + 
+  labs( title = "Peso de la carne", x = "Peso de la carne", y = "" ) + theme_bw() -> p5
+```
+
+```{r Boxplot Peso_visceras}
+data2 %>% 
+  ggplot(aes(y = "", x = Peso_visceras)) + 
+  geom_boxplot( fill = "#FFE1FF", color = "#CD96CD" ) + 
+  stat_summary( fun = mean, 
+                geom = "point", 
+                shape = 20, 
+                size = 3, 
+                color = "#8B668B" ) + 
+  labs( title = "Peso de las vísceras", x = "Peso de las vísceras", y = "" ) + theme_bw() -> p6
+```
+
+```{r Boxplot Peso_caparazon}
+data2 %>% 
+  ggplot(aes(y = "", x = Peso_caparazon)) + 
+  geom_boxplot( fill = "#FFE1FF", color = "#CD96CD" ) + 
+  stat_summary( fun = mean,
+                geom = "point",
+                shape = 20, 
+                size = 3, 
+                color = "#8B668B" ) + 
+  labs( title = "Peso del caparazón", x = "Peso del caparazón", y = "" ) + theme_bw() -> p7
+```
+
+##Comparación de los boxplots
+```{r Comparación de los boxplot}
+p1 + p2 + p3 + p4 + p5 + p6 + p7
+```
+  #Interpretación
+
+  Los diagramas de caja permiten comparar la distribución y dispersión de las diferentes características físicas.Las   
+  variables relacionadas con el peso pueden presentar valores alejados de la concentración principal de los datos. Estos 
+  valores deben ser identificados como posibles observaciones atípicas y no necesariamente como errores.Las variables de 
+  dimensiones físicas permiten observar la variabilidad en el tamaño de los individuos de la muestra.
+
+##Análisis de la variable categórica Sexo
+```{r Análisis de la variable categórica Sexo}
+data2 %>% 
+  count(Sexo, name = "n") %>% 
+  mutate( Porcentaje = round((n / sum(n)) * 100, 2) )
+```
+
+```{r Grafico de barras de la variable Sexo}
+data2 %>% 
+  ggplot(aes(x = Sexo)) + 
+  geom_bar( fill = "#FFE1FF", color = "#CD96CD" ) +
+  labs( title = "Distribución del sexo", x = "Sexo", y = "Frecuencia" ) + theme_bw()
+```
+
+  #Interpretación
+
+  El gráfico permite observar la cantidad de individuos pertenecientes a cada categoría de Sexo. La comparación de las 
+  frecuencias permite determinar si existe un predominio de alguna categoría o si la distribución de los individuos es 
+  relativamente equilibrada.
+
+##Análisis bivariado
+```{r Análisis Bivariado Largo vs Anillos}
+data2 %>% 
+  ggplot(aes(x = Largo, y = Anillos)) + 
+  geom_point( alpha = 0.4, color = "#EEAEEE" ) + 
+  geom_smooth( method = "lm", se = TRUE,
+               color = "#8B668B") + 
+  labs( title = "Relación entre largo y número de anillos", x = "Largo", y = "Número de anillos" ) + 
+  theme_bw()
+```
+
+  #Interpretación
+
+  El gráfico permite observar la relación entre el largo del abalone y el número de anillos. La tendencia general permite 
+  evaluar si los individuos con mayor longitud tienden a presentar un mayor número de anillos.
+
+
+```{r Análisis Bivariado Diametro vs Anillos }
+data2 %>% 
+  ggplot(aes(x = Diametro, y = Anillos)) + 
+  geom_point( alpha = 0.4, color = "#EEAEEE" ) + 
+  geom_smooth( method = "lm", se = TRUE,
+               color = "#8B668B") + 
+  labs( title = "Relación entre diámetro y número de anillos", x = "Diámetro", y = "Número de anillos" ) + 
+  theme_bw()
+```
+```{r Análisis Bivariado Altura vs Anillos}
+data2 %>% 
+  ggplot(aes(x = Altura, y = Anillos)) + 
+  geom_point( alpha = 0.4, color = "#EEAEEE" ) + 
+  geom_smooth( method = "lm", se = TRUE,
+               color = "#8B668B") + 
+  labs( title = "Relación entre altura y número de anillos", x = "Altura", y = "Número de anillos" ) + 
+  theme_bw()
+```
+```{r Análisis Bivariado Peso vs Anillos}
+data2 %>% 
+  ggplot(aes(x = Peso, y = Anillos)) + 
+  geom_point( alpha = 0.4, color = "#EEAEEE" ) + 
+  geom_smooth( method = "lm", se = TRUE,
+               color = "#8B668B") + 
+  labs( title = "Relación entre peso y número de anillos", x = "Peso", y = "Número de anillos" ) + 
+  theme_bw()
+```
+
+```{r Análisis Bivariado Peso_carne vs Anillos}
+data2 %>% 
+  ggplot(aes(x = Peso_carne, y = Anillos)) + 
+  geom_point( alpha = 0.4, color = "#EEAEEE" ) +
+  geom_smooth( method = "lm", se = TRUE,
+               color = "#8B668B") + 
+  labs( title = "Relación entre peso de la carne y número de anillos", x = "Peso de la carne", y = "Número de anillos" ) + 
+  theme_bw()
+```
+```{r Análisis Bivariado Peso_visceras vs Anillos}
+data2 %>% 
+  ggplot(aes(x = Peso_visceras, y = Anillos)) + 
+  geom_point( alpha = 0.4, color = "#EEAEEE" ) + 
+  geom_smooth( method = "lm", se = TRUE,
+               color = "#8B668B") + 
+  labs( title = "Relación entre peso de las vísceras y número de anillos", x = "Peso de las vísceras", y = "Número de anillos" ) + 
+  theme_bw()
+```
+```{r Análisis Bivariado Peso_caparazon vs Anillos}
+data2 %>%
+  ggplot(aes(x = Peso_caparazon, y = Anillos)) + 
+  geom_point( alpha = 0.4, color = "#EEAEEE" ) +
+  geom_smooth( method = "lm", se = TRUE,
+               color = "#8B668B") + 
+  labs( title = "Relación entre peso del caparazón y número de anillos", x = "Peso del caparazón", y = "Número de anillos" ) + 
+  theme_bw()
+```
+
+##Correlación
+```{r ggpairs}
+
+data2 %>% 
+  select(
+    Largo,
+    Diametro,
+    Altura,
+    Peso,
+    Peso_carne,
+    Peso_visceras,
+    Peso_caparazon,
+    Anillos
+  ) %>% 
+  ggpairs()
+
+```
+
+```{r Coeficientes Correlacion}
+correlaciones <- data2 %>%
+  summarise(
+    Largo = cor(Largo, Anillos),
+    Diametro = cor(Diametro, Anillos),
+    Altura = cor(Altura, Anillos),
+    Peso = cor(Peso, Anillos),
+    Peso_carne = cor(Peso_carne, Anillos),
+    Peso_visceras = cor(Peso_visceras, Anillos),
+    Peso_caparazon = cor(Peso_caparazon, Anillos)
+  )
+
+round(correlaciones, 3)
+```
+
+  #Interpretación
+
+  El coeficiente de correlación de Pearson permite medir la intensidad y dirección de la relación lineal entre cada   
+  característica física y el número de anillos. El coeficiente toma valores entre -1 y 1. Valores positivos indican que, en 
+  general, cuando una variable aumenta, el número de anillos también tiende a aumentar. Valores negativos indican una 
+  relación inversa. Un valor cercano a cero indica una relación lineal débil o inexistente.La correlación permite 
+  identificar qué variables presentan una mayor asociación lineal con Anillos. Sin embargo, una correlación no implica 
+  necesariamente una relación causal entre las 
+  
+##Relación entre Sexo y Anillos
+```{r Análisis Anillos según Sexo}
+data2 %>% 
+  ggplot(aes(x = Sexo, y = Anillos)) + 
+  geom_boxplot( fill = "#FFE1FF", color = "#CD96CD" ) + 
+  stat_summary( fun = mean, 
+                geom = "point", 
+                shape = 20, 
+                size = 3, 
+                color = "#8B668B" ) + 
+  labs( title = "Número de anillos según sexo", x = "Sexo", y = "Número de anillos" ) + 
+  theme_bw()
+```
+
+  #Interpretación
+
+  El diagrama de caja permite comparar la distribución de Anillos entre las diferentes categorías de Sexo. La comparación de   las medianas, los rangos intercuartílicos y los posibles valores atípicos permite identificar diferencias descriptivas   
+  entre los grupos.
+
+##Conclusión del análisis exploratorio
+El análisis exploratorio permite conocer las principales características de la base de datos Abalone. La variable Anillos presenta variabilidad entre los individuos, mientras que las variables físicas permiten describir diferentes características relacionadas con el tamaño y peso de los abalones.El análisis gráfico y estadístico permite identificar la distribución de cada variable, posibles valores atípicos y relaciones entre las características físicas y el número de anillos. 
+
+Las variables cuantitativas pueden analizarse mediante medidas descriptivas, histogramas, diagramas de caja y correlaciones. Por su parte, Sexo permite realizar comparaciones entre grupos.Estos resultados proporcionan una primera descripción de los datos y sirven como base para realizar posteriormente análisis estadísticos más específicos.

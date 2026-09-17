@@ -1,5 +1,5 @@
 --- 
-title: "ANALISIS ESTADISTICO DE LA EDAD DE LOS ABULONES"
+title: "Exploración y Análisis de las Características de los Abalones"
 author: "Mariana Gutiérrez - Daniela Idarraga"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
@@ -9,7 +9,7 @@ bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
 github-repo: rstudio/bookdown-demo
-description: "This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook."
+description: "En este análisis exploratorio de datos se estudia la base de datos Abalone, con el objetivo de conocer las principales características de los individuos y explorar la relación entre sus características físicas y el número de anillos."
 ---
 
 ```{r eval=FALSE}
